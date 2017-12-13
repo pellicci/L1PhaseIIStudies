@@ -25,6 +25,6 @@ private:
   float standMu_phi_tree;
 
   //Tokens
-  edm::EDGetTokenT<std::vector<CONTAINERFIXME> > L1standMuCandidatestoken_; 
+  edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuCandidatesToken_; 
 
 };
