@@ -1,5 +1,10 @@
 #! /usr/bin/env python
 
+"""
+Usage:
+./calculate_l1rates.py destination_file.root origin_directory_of_root_files
+"""
+
 import ROOT
 import sys
 import os
