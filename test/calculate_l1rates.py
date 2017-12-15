@@ -12,7 +12,7 @@ import os
 nBunches = 2508.
 nPU_min = 100.
 nPU_max = 200.
-nEventsMax = 500000
+nEventsMax = -1 #500000
 
 isMC = True
 print "Am I running on MC? -> ", isMC
@@ -49,11 +49,16 @@ print "Preparing plotting stuff"
 nbins_mupt = 131
 
 h_l1rate = dict()
-h_l1rate["MuPt"]      = ROOT.TH1F("MuPt","L1_SingleMu p_{T} distribution", nbins_mupt, -0.5, 130.5)
-h_l1rate["nMuVsPt"]   = ROOT.TH1F("nMuVsPt","L1_SingleMu rate vs p_{T} threshold", nbins_mupt, -0.5, 130.5)
+h_l1rate["MuPt"]      = ROOT.TH1F("MuPt",    "L1_SingleMu p_{T} distribution",      nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsPt"]   = ROOT.TH1F("nMuVsPt", "L1_SingleMu rate vs p_{T} threshold", nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsEta"]  = ROOT.TH1F("nMuVsEta","L1_SingleMu16 rate vs #eta",          30,         -3.,   3.   )
+h_l1rate["nMuVsPhi"]  = ROOT.TH1F("nMuVsPhi","L1_SingleMu16 rate vs #phi",          31,         -3.14, 3.14 )
 
 h_l1rate["MuPt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsEta"].GetXaxis().SetTitle("#eta")
+h_l1rate["nMuVsPhi"].GetXaxis().SetTitle("#phi")
+
 
 for hname in h_l1rate:
     if isMC:
@@ -85,6 +90,8 @@ for jentry in xrange(mytree.GetEntriesFast()):
 
     #Get the leading objects of the event
     maxmu_pt  = mytree.standMu_pT
+    maxmu_eta = mytree.standMu_eta
+    maxmu_phi = mytree.standMu_phi
 
     ##Fill the histos
     h_l1rate["MuPt"].Fill(maxmu_pt)
@@ -94,11 +101,20 @@ for jentry in xrange(mytree.GetEntriesFast()):
         if  maxmu_pt>= ptcut :
             h_l1rate["nMuVsPt"].Fill(ptcut)
 
+    # Fill the histos for rate vs eta and phi
+    if maxmu_pt >= 16. :
+        if maxmu_eta >= -3. :
+            h_l1rate["nMuVsEta"].Fill(maxmu_eta)
+        if maxmu_phi >= -3.14 :
+            h_l1rate["nMuVsPhi"].Fill(maxmu_phi)
+
 
 print "End of event loop"
 
+
 fOut_histos = ROOT.TFile(out_dir + out_root,"RECREATE")
 scale_factor_std = get_scale_factor(nZeroBias,nBunches)
+
 
 for hname in h_l1rate:
     h_l1rate[hname].Scale(scale_factor_std)
