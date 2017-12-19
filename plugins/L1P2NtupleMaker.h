@@ -1,3 +1,5 @@
+#include <DataFormats/L1Trigger/interface/BXVector.h>
+
 
 //---------- class declaration----------
 
@@ -12,6 +14,7 @@ private:
   virtual void endJob() override;
 
   const edm::InputTag L1standMuCandidates_;
+  const edm::InputTag L1GmtCandidates_;
 
   edm::Service<TFileService> fs;
 
@@ -24,7 +27,12 @@ private:
   float standMu_eta_tree;
   float standMu_phi_tree;
 
+  float gmtMu_pT_tree; 
+  float gmtMu_eta_tree;
+  float gmtMu_phi_tree;
+
   //Tokens
-  edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuCandidatesToken_; 
+  edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuCandidatesToken_;
+  edm::EDGetTokenT<BXVector<l1t::Muon> > L1GmtCandidatesToken_; 
 
 };
