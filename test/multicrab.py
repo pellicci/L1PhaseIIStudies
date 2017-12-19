@@ -4,7 +4,7 @@ config = Configuration()
 
 config.section_('General')
 config.General.transferOutputs = True
-config.General.workArea = 'crab_projects/'
+config.General.workArea = 'crab_projects/kalmanPlusGmt/'
 
 config.section_('JobType')
 config.JobType.psetName = 'run_l1p2ntuplemaker.py'
@@ -41,6 +41,17 @@ if __name__ == '__main__':
     config.General.requestName = 'P1P2NtupleMaker_SingleNu140'
     config.Data.unitsPerJob = 10
     config.Data.inputDataset = '/SingleNeutrino/PhaseIISpring17D-PU140_90X_upgrade2023_realistic_v9-v1/GEN-SIM-DIGI-RAW'
-    p = Process(target=submit, args=(config,))
-    p.start()
-    p.join()
+    p140 = Process(target=submit, args=(config,))
+    p140.start()
+    p140.join()
+
+    config.Site.ignoreGlobalBlacklist = False
+
+    config.General.requestName = 'P1P2NtupleMaker_SingleNu200'
+    config.Data.unitsPerJob = 10
+    config.Data.inputDataset = '/SingleNeutrino/PhaseIISpring17D-PU200_90X_upgrade2023_realistic_v9-v1/GEN-SIM-DIGI-RAW'
+    p200 = Process(target=submit, args=(config,))
+    p200.start()
+    p200.join()
+
+    config.Site.ignoreGlobalBlacklist = True
