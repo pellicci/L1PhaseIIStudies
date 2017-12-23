@@ -8,6 +8,7 @@ Usage:
 import ROOT
 import sys
 import os
+import math
 
 nBunches = 2508.
 nPU_min = 100.
@@ -49,20 +50,32 @@ print "Preparing plotting stuff"
 nbins_mupt = 131
 
 h_l1rate = dict()
-h_l1rate["MuPt"]     = ROOT.TH1F("MuPt",    "L1_SingleMu p_{T} distribution",      nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsPt"]  = ROOT.TH1F("nMuVsPt", "L1_SingleMu rate vs p_{T} threshold", nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsEta"] = ROOT.TH1F("nMuVsEta","L1_SingleMu16 rate vs #eta",          30,         -3.,   3.   )
-h_l1rate["nMuVsPhi"] = ROOT.TH1F("nMuVsPhi","L1_SingleMu16 rate vs #phi",          16,         -3.14, 3.14 )
-h_l1rate["MuPt_gmt"]     = ROOT.TH1F("MuPt_gmt",    "L1_SingleMu_gmt p_{T} distribution",      nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsPt_gmt"]  = ROOT.TH1F("nMuVsPt_gmt", "L1_SingleMu_gmt rate vs p_{T} threshold", nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsEta_gmt"] = ROOT.TH1F("nMuVsEta_gmt","L1_SingleMu16_gmt rate vs #eta",          30,         -3.,   3.   )
-h_l1rate["nMuVsPhi_gmt"] = ROOT.TH1F("nMuVsPhi_gmt","L1_SingleMu16_gmt rate vs #phi",          16,         -3.14, 3.14 )
+h_l1rate["MuPt_ER"]     = ROOT.TH1F("MuPt_ER",    "L1_SingleMu p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsPt_ER"]  = ROOT.TH1F("nMuVsPt_ER", "L1_SingleMu rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsEta_ER"] = ROOT.TH1F("nMuVsEta_ER","L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
+h_l1rate["nMuVsPhi_ER"] = ROOT.TH1F("nMuVsPhi_ER","L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
+
+h_l1rate["MuPt_gmt_ER"]     = ROOT.TH1F("MuPt_gmt_ER",    "L1_SingleMu_gmt p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsPt_gmt_ER"]  = ROOT.TH1F("nMuVsPt_gmt_ER", "L1_SingleMu_gmt rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsEta_gmt_ER"] = ROOT.TH1F("nMuVsEta_gmt_ER","L1_SingleMu16_gmt rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
+h_l1rate["nMuVsPhi_gmt_ER"] = ROOT.TH1F("nMuVsPhi_gmt_ER","L1_SingleMu16_gmt rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
+
+h_l1rate["MuPt_gmt"]     = ROOT.TH1F("MuPt_gmt",    "L1_SingleMu_gmt p_{T} distribution in full #eta range",      nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsPt_gmt"]  = ROOT.TH1F("nMuVsPt_gmt", "L1_SingleMu_gmt rate vs p_{T} threshold in full #eta range", nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsEta_gmt"] = ROOT.TH1F("nMuVsEta_gmt","L1_SingleMu16_gmt rate vs #eta in full #eta range",          30,         -3.,   3.   )
+h_l1rate["nMuVsPhi_gmt"] = ROOT.TH1F("nMuVsPhi_gmt","L1_SingleMu16_gmt rate vs #phi in full #eta range",          16,         -3.14, 3.14 )
 
 
-h_l1rate["MuPt"].GetXaxis().SetTitle("p_{T} [GeV]")
-h_l1rate["nMuVsPt"].GetXaxis().SetTitle("p_{T} [GeV]")
-h_l1rate["nMuVsEta"].GetXaxis().SetTitle("#eta")
-h_l1rate["nMuVsPhi"].GetXaxis().SetTitle("#phi")
+h_l1rate["MuPt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsPt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsEta_ER"].GetXaxis().SetTitle("#eta")
+h_l1rate["nMuVsPhi_ER"].GetXaxis().SetTitle("#phi")
+
+h_l1rate["MuPt_gmt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsPt_gmt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsEta_gmt_ER"].GetXaxis().SetTitle("#eta")
+h_l1rate["nMuVsPhi_gmt_ER"].GetXaxis().SetTitle("#phi")
+
 h_l1rate["MuPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_gmt"].GetXaxis().SetTitle("#eta")
@@ -107,31 +120,40 @@ for jentry in xrange(mytree.GetEntriesFast()):
     gmtmu_phi = mytree.gmtMu_phi
 
 
-    ##Fill the histos
-    h_l1rate["MuPt"].Fill(maxmu_pt)
+    ##Fill the histos for the pT distribution
+    h_l1rate["MuPt_ER"].Fill(maxmu_pt)
     h_l1rate["MuPt_gmt"].Fill(gmtmu_pt)
+    if math.fabs(gmtmu_eta) <= 0.8 :        
+        h_l1rate["MuPt_gmt_ER"].Fill(gmtmu_pt)
 
     ##Fill the histos for rate vs threshold
     for ptcut in xrange(nbins_mupt):
         if  maxmu_pt>= ptcut :
-            h_l1rate["nMuVsPt"].Fill(ptcut)
+            h_l1rate["nMuVsPt_ER"].Fill(ptcut)
             
     for ptcut in xrange(nbins_mupt):
         if  gmtmu_pt>= ptcut :
             h_l1rate["nMuVsPt_gmt"].Fill(ptcut)
+            if  math.fabs(gmtmu_eta) <= 0.8 :   
+                h_l1rate["nMuVsPt_gmt_ER"].Fill(ptcut)
 
-    # Fill the histos for rate vs eta and phi
+    ##Fill the histos for rate vs eta and phi
     if maxmu_pt >= 16. :
         if maxmu_eta >= -3. :
-            h_l1rate["nMuVsEta"].Fill(maxmu_eta)
+            h_l1rate["nMuVsEta_ER"].Fill(maxmu_eta)
         if maxmu_phi >= -3.14 :
-            h_l1rate["nMuVsPhi"].Fill(maxmu_phi)
+            h_l1rate["nMuVsPhi_ER"].Fill(maxmu_phi)
 
     if gmtmu_pt >= 16. :
         if gmtmu_eta >= -3. :
             h_l1rate["nMuVsEta_gmt"].Fill(gmtmu_eta)
+            if  math.fabs(gmtmu_eta) <= 0.8 :  
+                h_l1rate["nMuVsEta_gmt_ER"].Fill(gmtmu_eta)            
+
         if gmtmu_phi >= -3.14 :
             h_l1rate["nMuVsPhi_gmt"].Fill(gmtmu_phi)
+            if  math.fabs(gmtmu_eta) <= 0.8 : 
+                h_l1rate["nMuVsPhi_gmt_ER"].Fill(gmtmu_phi)
 
 
 print "End of event loop"
