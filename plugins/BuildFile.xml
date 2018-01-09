@@ -3,4 +3,5 @@
 <use name="FWCore/ParameterSet"/>
 <use name="PhysicsTools/UtilAlgos"/>
 <use name="DataFormats/L1Trigger"/>
+<use name="DataFormats/L1TMuon"/>
 <flags EDM_PLUGIN="1"/>

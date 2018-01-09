@@ -37,9 +37,9 @@ KalmanMuEmulation(process)
 process.seq = cms.Path(process.simTwinMuxDigis * process.simBmtfDigis * process.l1KalmanMuons * process.L1P2NtupleMaker)
 process.schedule = cms.Schedule(process.seq)
 
-#process.out = cms.OutputModule("PoolOutputModule",
+# process.out = cms.OutputModule("PoolOutputModule",
 #    fileName = cms.untracked.string('singleNeutrino140.root')
-#)
-#process.seq = cms.Path(process.simTwinMuxDigis * process.simBmtfDigis * process.l1KalmanMuons)
-#process.e = cms.EndPath(process.out)
-#process.schedule = cms.Schedule(process.seq,process.e)
+# )
+# process.seq = cms.Path(process.simTwinMuxDigis * process.simBmtfDigis * process.l1KalmanMuons)
+# process.e = cms.EndPath(process.out)
+# process.schedule = cms.Schedule(process.seq,process.e)

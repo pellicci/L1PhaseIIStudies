@@ -50,11 +50,13 @@ print "Preparing plotting stuff"
 nbins_mupt = 131
 
 h_l1rate = dict()
+# kalman
 h_l1rate["MuPt_ER"]     = ROOT.TH1F("MuPt_ER",    "L1_SingleMu p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
 h_l1rate["nMuVsPt_ER"]  = ROOT.TH1F("nMuVsPt_ER", "L1_SingleMu rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
 h_l1rate["nMuVsEta_ER"] = ROOT.TH1F("nMuVsEta_ER","L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
 h_l1rate["nMuVsPhi_ER"] = ROOT.TH1F("nMuVsPhi_ER","L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
 
+# gmt
 h_l1rate["MuPt_gmt_ER"]     = ROOT.TH1F("MuPt_gmt_ER",    "L1_SingleMu_gmt p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
 h_l1rate["nMuVsPt_gmt_ER"]  = ROOT.TH1F("nMuVsPt_gmt_ER", "L1_SingleMu_gmt rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
 h_l1rate["nMuVsEta_gmt_ER"] = ROOT.TH1F("nMuVsEta_gmt_ER","L1_SingleMu16_gmt rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
@@ -65,7 +67,15 @@ h_l1rate["nMuVsPt_gmt"]  = ROOT.TH1F("nMuVsPt_gmt", "L1_SingleMu_gmt rate vs p_{
 h_l1rate["nMuVsEta_gmt"] = ROOT.TH1F("nMuVsEta_gmt","L1_SingleMu16_gmt rate vs #eta in full #eta range",          30,         -3.,   3.   )
 h_l1rate["nMuVsPhi_gmt"] = ROOT.TH1F("nMuVsPhi_gmt","L1_SingleMu16_gmt rate vs #phi in full #eta range",          16,         -3.14, 3.14 )
 
+# bmtf
+h_l1rate["MuPt_bmtf_ER"]     = ROOT.TH1F("MuPt_bmtf_ER",    "L1_SingleMu_bmtf p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsPt_bmtf_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_ER", "L1_SingleMu_bmtf rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
+h_l1rate["nMuVsEta_bmtf_ER"] = ROOT.TH1F("nMuVsEta_bmtf_ER","L1_SingleMu16_bmtf rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
+h_l1rate["nMuVsPhi_bmtf_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_ER","L1_SingleMu16_bmtf rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
+h_l1rate["quality_bmtf_ER"]  = ROOT.TH1F("quality_bmtf_ER", "L1_SingleMu_bmtf quality information",                    17,         -0.5,  16.5 )
 
+
+# assign axis title
 h_l1rate["MuPt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_ER"].GetXaxis().SetTitle("#eta")
@@ -80,6 +90,13 @@ h_l1rate["MuPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_gmt"].GetXaxis().SetTitle("#eta")
 h_l1rate["nMuVsPhi_gmt"].GetXaxis().SetTitle("#phi")
+
+h_l1rate["MuPt_bmtf_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsPt_bmtf_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsEta_bmtf_ER"].GetXaxis().SetTitle("#eta")
+h_l1rate["nMuVsPhi_bmtf_ER"].GetXaxis().SetTitle("#phi")
+h_l1rate["quality_bmtf_ER"].GetXaxis().SetTitle("#mu quality")
+
 
 
 for hname in h_l1rate:
@@ -119,12 +136,20 @@ for jentry in xrange(mytree.GetEntriesFast()):
     gmtmu_eta = mytree.gmtMu_eta
     gmtmu_phi = mytree.gmtMu_phi
 
+    bmtfmu_pt      = mytree.bmtfMu_pT
+    bmtfmu_eta     = mytree.bmtfMu_eta
+    bmtfmu_phi     = mytree.bmtfMu_phi
+    bmtfmu_quality = mytree.bmtfMu_Quality
+
 
     ##Fill the histos for the pT distribution
     h_l1rate["MuPt_ER"].Fill(maxmu_pt)
     h_l1rate["MuPt_gmt"].Fill(gmtmu_pt)
     if math.fabs(gmtmu_eta) <= 0.8 :        
         h_l1rate["MuPt_gmt_ER"].Fill(gmtmu_pt)
+
+    h_l1rate["MuPt_bmtf_ER"].Fill(bmtfmu_pt)
+
 
     ##Fill the histos for rate vs threshold
     for ptcut in xrange(nbins_mupt):
@@ -136,6 +161,11 @@ for jentry in xrange(mytree.GetEntriesFast()):
             h_l1rate["nMuVsPt_gmt"].Fill(ptcut)
             if  math.fabs(gmtmu_eta) <= 0.8 :   
                 h_l1rate["nMuVsPt_gmt_ER"].Fill(ptcut)
+
+    for ptcut in xrange(nbins_mupt):
+        if  maxmu_pt>= ptcut :
+            h_l1rate["nMuVsPt_bmtf_ER"].Fill(ptcut)
+
 
     ##Fill the histos for rate vs eta and phi
     if maxmu_pt >= 16. :
@@ -154,6 +184,18 @@ for jentry in xrange(mytree.GetEntriesFast()):
             h_l1rate["nMuVsPhi_gmt"].Fill(gmtmu_phi)
             if  math.fabs(gmtmu_eta) <= 0.8 : 
                 h_l1rate["nMuVsPhi_gmt_ER"].Fill(gmtmu_phi)
+
+    if bmtfmu_pt >= 16. :
+        if bmtfmu_eta >= -3. :
+            h_l1rate["nMuVsEta_bmtf_ER"].Fill(bmtfmu_eta)
+        if bmtfmu_phi >= -3.14 :
+            h_l1rate["nMuVsPhi_bmtf_ER"].Fill(bmtfmu_phi)
+
+
+    ##Fill the histos for the trigger quality 
+    if bmtfmu_pt >= 0. :  
+        h_l1rate["quality_bmtf_ER"].Fill(bmtfmu_quality)
+
 
 
 print "End of event loop"

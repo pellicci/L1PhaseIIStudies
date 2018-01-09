@@ -15,6 +15,7 @@ private:
 
   const edm::InputTag L1standMuCandidates_;
   const edm::InputTag L1GmtCandidates_;
+  const edm::InputTag L1BmtfCandidates_;
 
   edm::Service<TFileService> fs;
 
@@ -30,9 +31,17 @@ private:
   float gmtMu_pT_tree; 
   float gmtMu_eta_tree;
   float gmtMu_phi_tree;
+  //int   gmtMu_Quality_tree;
+
+  float bmtfMu_pT_tree; 
+  float bmtfMu_eta_tree;
+  float bmtfMu_phi_tree;
+  int   bmtfMu_Quality_tree;
+
 
   //Tokens
   edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuCandidatesToken_;
   edm::EDGetTokenT<BXVector<l1t::Muon> > L1GmtCandidatesToken_; 
+  edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand> > L1BmtfCandidatesToken_; 
 
 };
