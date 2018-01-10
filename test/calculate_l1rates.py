@@ -163,7 +163,7 @@ for jentry in xrange(mytree.GetEntriesFast()):
                 h_l1rate["nMuVsPt_gmt_ER"].Fill(ptcut)
 
     for ptcut in xrange(nbins_mupt):
-        if  maxmu_pt>= ptcut :
+        if  bmtfmu_pt>= ptcut :
             h_l1rate["nMuVsPt_bmtf_ER"].Fill(ptcut)
 
 
