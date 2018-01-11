@@ -144,6 +144,8 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfMu_phi_tree     = mu->hwPhi() * 2. * TMath::Pi() /576.; // compressed relative phi from hardware * 2*pi/576 = local phi in rad
     bmtfMu_Quality_tree = mu->hwQual(); // hardware quality code
 
+
+    //std::cout << " mu pT :" << bmtfMu_pT_tree  << " Eta: " << bmtfMu_eta_tree << " phi: " << bmtfMu_phi_tree << " quality: "<< bmtfMu_Quality_tree << std::endl;
   }
 
 

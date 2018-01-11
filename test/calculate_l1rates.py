@@ -47,32 +47,33 @@ def get_scale_factor(_nZeroBias, _nBunches):
     return 0.
 
 print "Preparing plotting stuff"
-nbins_mupt = 131
+nbins_mupt  = 131
+nbins_muPhi = 16
 
 h_l1rate = dict()
 # kalman
-h_l1rate["MuPt_ER"]     = ROOT.TH1F("MuPt_ER",    "L1_SingleMu p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsPt_ER"]  = ROOT.TH1F("nMuVsPt_ER", "L1_SingleMu rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsEta_ER"] = ROOT.TH1F("nMuVsEta_ER","L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
-h_l1rate["nMuVsPhi_ER"] = ROOT.TH1F("nMuVsPhi_ER","L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
+h_l1rate["MuPt_ER"]     = ROOT.TH1F("MuPt_ER",    "L1_SingleMu p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsPt_ER"]  = ROOT.TH1F("nMuVsPt_ER", "L1_SingleMu rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsEta_ER"] = ROOT.TH1F("nMuVsEta_ER","L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
+h_l1rate["nMuVsPhi_ER"] = ROOT.TH1F("nMuVsPhi_ER","L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 
 # gmt
-h_l1rate["MuPt_gmt_ER"]     = ROOT.TH1F("MuPt_gmt_ER",    "L1_SingleMu_gmt p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsPt_gmt_ER"]  = ROOT.TH1F("nMuVsPt_gmt_ER", "L1_SingleMu_gmt rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsEta_gmt_ER"] = ROOT.TH1F("nMuVsEta_gmt_ER","L1_SingleMu16_gmt rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
-h_l1rate["nMuVsPhi_gmt_ER"] = ROOT.TH1F("nMuVsPhi_gmt_ER","L1_SingleMu16_gmt rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
+h_l1rate["MuPt_gmt_ER"]     = ROOT.TH1F("MuPt_gmt_ER",    "L1_SingleMu_gmt p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsPt_gmt_ER"]  = ROOT.TH1F("nMuVsPt_gmt_ER", "L1_SingleMu_gmt rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsEta_gmt_ER"] = ROOT.TH1F("nMuVsEta_gmt_ER","L1_SingleMu16_gmt rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
+h_l1rate["nMuVsPhi_gmt_ER"] = ROOT.TH1F("nMuVsPhi_gmt_ER","L1_SingleMu16_gmt rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 
-h_l1rate["MuPt_gmt"]     = ROOT.TH1F("MuPt_gmt",    "L1_SingleMu_gmt p_{T} distribution in full #eta range",      nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsPt_gmt"]  = ROOT.TH1F("nMuVsPt_gmt", "L1_SingleMu_gmt rate vs p_{T} threshold in full #eta range", nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsEta_gmt"] = ROOT.TH1F("nMuVsEta_gmt","L1_SingleMu16_gmt rate vs #eta in full #eta range",          30,         -3.,   3.   )
-h_l1rate["nMuVsPhi_gmt"] = ROOT.TH1F("nMuVsPhi_gmt","L1_SingleMu16_gmt rate vs #phi in full #eta range",          16,         -3.14, 3.14 )
+h_l1rate["MuPt_gmt"]     = ROOT.TH1F("MuPt_gmt",    "L1_SingleMu_gmt p_{T} distribution in full #eta range",      nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsPt_gmt"]  = ROOT.TH1F("nMuVsPt_gmt", "L1_SingleMu_gmt rate vs p_{T} threshold in full #eta range", nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsEta_gmt"] = ROOT.TH1F("nMuVsEta_gmt","L1_SingleMu16_gmt rate vs #eta in full #eta range",          30,          -3.,   3.   )
+h_l1rate["nMuVsPhi_gmt"] = ROOT.TH1F("nMuVsPhi_gmt","L1_SingleMu16_gmt rate vs #phi in full #eta range",          nbins_muPhi, -3.14, 3.14 )
 
 # bmtf
-h_l1rate["MuPt_bmtf_ER"]     = ROOT.TH1F("MuPt_bmtf_ER",    "L1_SingleMu_bmtf p_{T} distribution in |#eta|<=0.8",      nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsPt_bmtf_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_ER", "L1_SingleMu_bmtf rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt, -0.5,  130.5)
-h_l1rate["nMuVsEta_bmtf_ER"] = ROOT.TH1F("nMuVsEta_bmtf_ER","L1_SingleMu16_bmtf rate vs #eta in |#eta|<=0.8",          30,         -3.,   3.   )
-h_l1rate["nMuVsPhi_bmtf_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_ER","L1_SingleMu16_bmtf rate vs #phi in |#eta|<=0.8",          16,         -3.14, 3.14 )
-h_l1rate["quality_bmtf_ER"]  = ROOT.TH1F("quality_bmtf_ER", "L1_SingleMu_bmtf quality information",                    17,         -0.5,  16.5 )
+h_l1rate["MuPt_bmtf_ER"]     = ROOT.TH1F("MuPt_bmtf_ER",    "L1_SingleMu_bmtf p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsPt_bmtf_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_ER", "L1_SingleMu_bmtf rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsEta_bmtf_ER"] = ROOT.TH1F("nMuVsEta_bmtf_ER","L1_SingleMu16_bmtf rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
+h_l1rate["nMuVsPhi_bmtf_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_ER","L1_SingleMu16_bmtf rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
+h_l1rate["quality_bmtf_ER"]  = ROOT.TH1F("quality_bmtf_ER", "L1_SingleMu_bmtf quality information",                    17,          -0.5,  16.5 )
 
 
 # assign axis title
