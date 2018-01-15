@@ -44,6 +44,7 @@ names_list.sort()
 
 kalman_list    = []
 gmt_list       = []
+bmtfStd_list   = []
 bmtf_list      = []
 plotName_list  = []
 
@@ -54,10 +55,13 @@ for hname in names_list :
         if "_gmt" in hname :
             gmt_list.append(histos_dict[hname])
         elif "_bmtf" in hname :
-            bmtf_list.append(histos_dict[hname])
+            if "_Std" in hname : 
+                bmtfStd_list.append(histos_dict[hname])
+            else :
+                bmtf_list.append(histos_dict[hname])
         else :
             kalman_list.append(histos_dict[hname])
-            plotName_list.append(hname)
+            plotName_list.append(hname)  # quality plot not present in this list by now, therefore will not be drawn
         
 
 # draw plots
@@ -73,14 +77,19 @@ for i in range(len(plotName_list)) :
     kalman_list[i].SetMarkerStyle(20)
     kalman_list[i].SetMarkerColor(2)
     kalman_list[i].SetLineColor(2)
+
+    bmtfStd_list[i].SetMarkerStyle(20)
+    bmtfStd_list[i].SetMarkerColor(4)
+    bmtfStd_list[i].SetLineColor(1)
     
     bmtf_list[i].SetMarkerStyle(20)
     bmtf_list[i].SetMarkerColor(1)
     bmtf_list[i].SetLineColor(1)
 
 
-    kalman_list[i].SetMaximum(1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
-    bmtf_list[i].SetMaximum(  1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    kalman_list[i].SetMaximum( 1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    bmtfStd_list[i].SetMaximum(1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    bmtf_list[i].SetMaximum(   1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
 
     #kalman_list[i].SetMinimum(min(kalman_list[i].GetMinimum(),bmtf_list[i].GetMinimum()))
     #bmtf_list[i].SetMinimum(min(kalman_list[i].GetMinimum(),bmtf_list[i].GetMinimum()))
@@ -92,6 +101,7 @@ for i in range(len(plotName_list)) :
 
     # gmt_list[i].Draw('EP')
     kalman_list[i].Draw('EP')
+    bmtfStd_list[i].Draw('sameEP')
     bmtf_list[i].Draw('sameEP')
     
     
@@ -100,6 +110,7 @@ for i in range(len(plotName_list)) :
     legend = TLegend(0.74,0.68,0.94,0.87)
     legend.AddEntry(kalman_list[i],"Kalman", "pl")
     # legend.AddEntry(gmt_list[i],"Gmt","pl")
+    legend.AddEntry(bmtfStd_list[i],"BmtfStd","pl")
     legend.AddEntry(bmtf_list[i],"Bmtf","pl")
     legend.SetFillColor(kWhite)
     legend.SetLineColor(kBlack)

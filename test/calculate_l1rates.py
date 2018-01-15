@@ -68,6 +68,13 @@ h_l1rate["nMuVsPt_gmt"]  = ROOT.TH1F("nMuVsPt_gmt", "L1_SingleMu_gmt rate vs p_{
 h_l1rate["nMuVsEta_gmt"] = ROOT.TH1F("nMuVsEta_gmt","L1_SingleMu16_gmt rate vs #eta in full #eta range",          30,          -3.,   3.   )
 h_l1rate["nMuVsPhi_gmt"] = ROOT.TH1F("nMuVsPhi_gmt","L1_SingleMu16_gmt rate vs #phi in full #eta range",          nbins_muPhi, -3.14, 3.14 )
 
+# bmtf Standard
+h_l1rate["MuPt_bmtf_Std_ER"]     = ROOT.TH1F("MuPt_bmtf_Std_ER",    "L1_SingleMu_bmtf_Std p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsPt_bmtf_Std_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_Std_ER", "L1_SingleMu_bmtf_Std rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsEta_bmtf_Std_ER"] = ROOT.TH1F("nMuVsEta_bmtf_Std_ER","L1_SingleMu16_bmtf_Std rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
+h_l1rate["nMuVsPhi_bmtf_Std_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_Std_ER","L1_SingleMu16_bmtf_Std rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
+h_l1rate["quality_bmtf_Std_ER"]  = ROOT.TH1F("quality_bmtf_Std_ER", "L1_SingleMu_bmtf_Std quality information",                    17,          -0.5,  16.5 )
+
 # bmtf
 h_l1rate["MuPt_bmtf_ER"]     = ROOT.TH1F("MuPt_bmtf_ER",    "L1_SingleMu_bmtf p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
 h_l1rate["nMuVsPt_bmtf_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_ER", "L1_SingleMu_bmtf rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
@@ -91,6 +98,12 @@ h_l1rate["MuPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_gmt"].GetXaxis().SetTitle("#eta")
 h_l1rate["nMuVsPhi_gmt"].GetXaxis().SetTitle("#phi")
+
+h_l1rate["MuPt_bmtf_Std_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsPt_bmtf_Std_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
+h_l1rate["nMuVsEta_bmtf_Std_ER"].GetXaxis().SetTitle("#eta")
+h_l1rate["nMuVsPhi_bmtf_Std_ER"].GetXaxis().SetTitle("#phi")
+h_l1rate["quality_bmtf_Std_ER"].GetXaxis().SetTitle("#mu quality")
 
 h_l1rate["MuPt_bmtf_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_bmtf_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
@@ -137,6 +150,11 @@ for jentry in xrange(mytree.GetEntriesFast()):
     gmtmu_eta = mytree.gmtMu_eta
     gmtmu_phi = mytree.gmtMu_phi
 
+    bmtfStdmu_pt      = mytree.bmtfStdMu_pT
+    bmtfStdmu_eta     = mytree.bmtfStdMu_eta
+    bmtfStdmu_phi     = mytree.bmtfStdMu_phi
+    bmtfStdmu_quality = mytree.bmtfStdMu_Quality
+
     bmtfmu_pt      = mytree.bmtfMu_pT
     bmtfmu_eta     = mytree.bmtfMu_eta
     bmtfmu_phi     = mytree.bmtfMu_phi
@@ -149,6 +167,7 @@ for jentry in xrange(mytree.GetEntriesFast()):
     if math.fabs(gmtmu_eta) <= 0.8 :        
         h_l1rate["MuPt_gmt_ER"].Fill(gmtmu_pt)
 
+    h_l1rate["MuPt_bmtf_Std_ER"].Fill(bmtfStdmu_pt)
     h_l1rate["MuPt_bmtf_ER"].Fill(bmtfmu_pt)
 
 
@@ -162,6 +181,10 @@ for jentry in xrange(mytree.GetEntriesFast()):
             h_l1rate["nMuVsPt_gmt"].Fill(ptcut)
             if  math.fabs(gmtmu_eta) <= 0.8 :   
                 h_l1rate["nMuVsPt_gmt_ER"].Fill(ptcut)
+
+    for ptcut in xrange(nbins_mupt):
+        if  bmtfStdmu_pt>= ptcut :
+            h_l1rate["nMuVsPt_bmtf_Std_ER"].Fill(ptcut)
 
     for ptcut in xrange(nbins_mupt):
         if  bmtfmu_pt>= ptcut :
@@ -186,6 +209,12 @@ for jentry in xrange(mytree.GetEntriesFast()):
             if  math.fabs(gmtmu_eta) <= 0.8 : 
                 h_l1rate["nMuVsPhi_gmt_ER"].Fill(gmtmu_phi)
 
+    if bmtfStdmu_pt >= 16. :
+        if bmtfStdmu_eta >= -3. :
+            h_l1rate["nMuVsEta_bmtf_Std_ER"].Fill(bmtfStdmu_eta)
+        if bmtfStdmu_phi >= -3.14 :
+            h_l1rate["nMuVsPhi_bmtf_Std_ER"].Fill(bmtfStdmu_phi)
+
     if bmtfmu_pt >= 16. :
         if bmtfmu_eta >= -3. :
             h_l1rate["nMuVsEta_bmtf_ER"].Fill(bmtfmu_eta)
@@ -194,6 +223,9 @@ for jentry in xrange(mytree.GetEntriesFast()):
 
 
     ##Fill the histos for the trigger quality 
+    if bmtfStdmu_pt >= 0. :  
+        h_l1rate["quality_bmtf_Std_ER"].Fill(bmtfStdmu_quality)
+
     if bmtfmu_pt >= 0. :  
         h_l1rate["quality_bmtf_ER"].Fill(bmtfmu_quality)
 

@@ -8,6 +8,8 @@ public:
   explicit L1P2NtupleMaker(const edm::ParameterSet&);
   ~L1P2NtupleMaker();
 
+  float calcGlobalPhi(int localhwPhi, int proc);
+
 private:
   virtual void beginJob() override;
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
@@ -15,6 +17,7 @@ private:
 
   const edm::InputTag L1standMuCandidates_;
   const edm::InputTag L1GmtCandidates_;
+  const edm::InputTag L1BmtfStdCandidates_;
   const edm::InputTag L1BmtfCandidates_;
 
   edm::Service<TFileService> fs;
@@ -33,6 +36,11 @@ private:
   float gmtMu_phi_tree;
   //int   gmtMu_Quality_tree;
 
+  float bmtfStdMu_pT_tree; 
+  float bmtfStdMu_eta_tree;
+  float bmtfStdMu_phi_tree;
+  int   bmtfStdMu_Quality_tree;
+
   float bmtfMu_pT_tree; 
   float bmtfMu_eta_tree;
   float bmtfMu_phi_tree;
@@ -42,6 +50,7 @@ private:
   //Tokens
   edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuCandidatesToken_;
   edm::EDGetTokenT<BXVector<l1t::Muon> > L1GmtCandidatesToken_; 
+  edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand> > L1BmtfStdCandidatesToken_; 
   edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand> > L1BmtfCandidatesToken_; 
 
 };
