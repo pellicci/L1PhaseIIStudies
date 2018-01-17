@@ -69,20 +69,39 @@ void L1P2NtupleMaker::endJob()
 {
 }
 
+
 // take the local phi from hw and return the global phi for bmtf 
 float L1P2NtupleMaker::calcGlobalPhi(int localhwPhi, int proc)
 {
-  int globPhiDeg = 0;
+  int   globhwPhi   = 0;
+  float globPhysPhi = 0.;
 
-  // each BMTF processor corresponds to a 30 degree wedge = 48 in int-scale
-  globPhiDeg = (proc) * 48 + localhwPhi;
-  // first processor starts at CMS phi = -15 degrees...
-  globPhiDeg += 576-24;
-  // handle wrap-around (since we add the 576-24, the value will never be negative!)
-  globPhiDeg = globPhiDeg%576;
+  // --- first convert hw local phi to hw global phi   
+  globhwPhi = (proc) * 48 + localhwPhi; // each BMTF processor corresponds to a 30 degree wedge = 48 in int-scale
+    
+  globhwPhi += 576-24;                  // first processor starts at CMS phi = -15 degrees...
+  
+  globhwPhi = globhwPhi%576;            // handle wrap-around (since we add the 576-24, the value will never be negative!)
 
-  return globPhiDeg*TMath::Pi()/180. - TMath::Pi();
+
+  //std::cout<< "processor: "<<proc<<" local phi: "<<localhwPhi<<" global hw phi: "<<globhwPhi<<endl;
+
+
+  // --- then convert hw global phi to physical global phi (in rad)
+  globPhysPhi = globhwPhi * 2 * TMath::Pi() /576.; // phi in 0 - 2Pi
+
+  // --- phi in -Pi - Pi 
+  if(globPhysPhi >= 0 && globPhysPhi <= TMath::Pi() ) {globPhysPhi = globPhysPhi;}
+  else if (globPhysPhi > TMath::Pi() && globPhysPhi <= 2 * TMath::Pi()) {globPhysPhi = globPhysPhi - 2*TMath::Pi();}
+  else std::cout<<" wrong value of phi!";
+  
+  
+  //std::cout<< "global physical phi "<< globPhysPhi <<endl;
+
+
+  return globPhysPhi;
 }
+
 
 // ------------ method called for each event  ------------
 void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
@@ -122,7 +141,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   //Loop over Kalman Filter standalone muons 
   float pTmuMax   = -999.;
   float pTmu_temp = -999.;
-
+  
   for(auto mu = L1standMuCandidates->begin(); mu != L1standMuCandidates->end(); ++mu){
 
     pTmu_temp = mu->pt();
@@ -134,14 +153,14 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     standMu_eta_tree = mu->eta();
     standMu_phi_tree = mu->phi();
 
-    //std::cout << "mu pT :" << mu->pt() << "Eta: " << mu->eta() << "phi:" << mu->phi() << std::endl;
+    //std::cout << "mu pT :" << mu->pt() << " Eta: " << mu->eta() << " phi:" << mu->phi() << std::endl;
   }
 
 
   //Loop over GMT standalone muons 
   float pTmuGmtMax   = -999.;
   float pTmuGmt_temp = -999.;
-
+ 
   for(auto mu = L1GmtCandidates->begin(); mu != L1GmtCandidates->end(); ++mu){
 
     pTmuGmt_temp = mu->pt();
@@ -154,14 +173,14 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     gmtMu_phi_tree     = mu->phi();
     //gmtMu_Quality_tree = mu->hwQual(); // hardware quality code  
 
-    //std::cout << "mu pT :" << mu->pt() << "Eta: " << mu->eta() << "phi:" << mu->phi() << std::endl;
+    //std::cout << "mu pT :" << mu->pt() << " Eta: " << mu->eta() << " phi:" << mu->phi() << std::endl;
   }
 
 
   //Loop over Standard BMTF standalone muons 
   float pTmuBmtfStdMax   = -999.;
   float pTmuBmtfStd_temp = -999.;
-
+  
   for(auto mu = L1BmtfStdCandidates->begin(); mu != L1BmtfStdCandidates->end(); ++mu){
 
     pTmuBmtfStd_temp = 0.5 * mu->hwPt(); // 0.5* compressed pT as transmitted by hardware = pT (GeV)
@@ -174,15 +193,14 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfStdMu_phi_tree     = L1P2NtupleMaker::calcGlobalPhi(mu->hwPhi(), mu->processor());
     bmtfStdMu_Quality_tree = mu->hwQual(); // hardware quality code
 
-
-    //std::cout << " mu pT :" << bmtfStdMu_pT_tree  << " Eta: " << bmtfStdMu_eta_tree << " phi: " << bmtfStdMu_phi_tree << " quality: "<< bmtfStdMu_Quality_tree << std::endl;
+    //std::cout << " mu pT :" << bmtfStdMu_pT_tree  << " Eta: " << bmtfStdMu_eta_tree << " Global phi Rad: " << bmtfStdMu_phi_tree << " quality: "<< bmtfStdMu_Quality_tree << std::endl;
   }
 
 
   //Loop over BMTF standalone muons 
   float pTmuBmtfMax   = -999.;
   float pTmuBmtf_temp = -999.;
-
+  
   for(auto mu = L1BmtfCandidates->begin(); mu != L1BmtfCandidates->end(); ++mu){
 
     pTmuBmtf_temp = 0.5 * mu->hwPt(); // 0.5* compressed pT as transmitted by hardware = pT (GeV)
@@ -195,8 +213,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfMu_phi_tree     = L1P2NtupleMaker::calcGlobalPhi(mu->hwPhi(), mu->processor());
     bmtfMu_Quality_tree = mu->hwQual(); // hardware quality code
 
-
-    //std::cout << " mu pT :" << bmtfMu_pT_tree  << " Eta: " << bmtfMu_eta_tree << " phi: " << bmtfMu_phi_tree << " quality: "<< bmtfMu_Quality_tree << std::endl;
+    //std::cout << " mu pT :" << bmtfMu_pT_tree  << " Eta: " << bmtfMu_eta_tree << " Global phi Rad: " << bmtfMu_phi_tree << " quality: "<< bmtfMu_Quality_tree << std::endl;
   }
 
 
