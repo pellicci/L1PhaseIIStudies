@@ -38,6 +38,9 @@ L1P2NtupleMaker::L1P2NtupleMaker(const edm::ParameterSet& iConfig) :
   mytree->Branch("standMu_pT", &standMu_pT_tree);
   mytree->Branch("standMu_eta",&standMu_eta_tree);
   mytree->Branch("standMu_phi",&standMu_phi_tree);
+  mytree->Branch("standMu_Quality", &standMu_Quality_tree);
+  mytree->Branch("standMu_charge", &standMu_charge_tree);
+  mytree->Branch("standMu_approxChi2", &standMu_approxChi2_tree);
 
   mytree->Branch("gmtMu_pT", &gmtMu_pT_tree); 
   mytree->Branch("gmtMu_eta",&gmtMu_eta_tree);
@@ -48,11 +51,13 @@ L1P2NtupleMaker::L1P2NtupleMaker(const edm::ParameterSet& iConfig) :
   mytree->Branch("bmtfStdMu_eta",&bmtfStdMu_eta_tree);
   mytree->Branch("bmtfStdMu_phi",&bmtfStdMu_phi_tree);
   mytree->Branch("bmtfStdMu_Quality",&bmtfStdMu_Quality_tree);
+  mytree->Branch("bmtfStdMu_charge", &bmtfStdMu_charge_tree);
 
   mytree->Branch("bmtfMu_pT", &bmtfMu_pT_tree); 
   mytree->Branch("bmtfMu_eta",&bmtfMu_eta_tree);
   mytree->Branch("bmtfMu_phi",&bmtfMu_phi_tree);
   mytree->Branch("bmtfMu_Quality",&bmtfMu_Quality_tree);
+  mytree->Branch("bmtfMu_charge", &bmtfMu_charge_tree); 
 
 }
 
@@ -118,9 +123,12 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   edm::Handle<BXVector<l1t::RegionalMuonCand> > L1BmtfCandidates;
   iEvent.getByLabel(L1BmtfCandidates_, L1BmtfCandidates);
 
-  standMu_pT_tree  = -999.;
-  standMu_eta_tree = -999.;
-  standMu_phi_tree = -999.;
+  standMu_pT_tree         = -999.;
+  standMu_eta_tree        = -999.;
+  standMu_phi_tree        = -999.;
+  standMu_Quality_tree    = 0;
+  standMu_charge_tree     = -999;
+  standMu_approxChi2_tree = -999;
 
   gmtMu_pT_tree      = -999.;     
   gmtMu_eta_tree     = -999.;
@@ -131,11 +139,13 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   bmtfStdMu_eta_tree     = -999.;
   bmtfStdMu_phi_tree     = -999.;
   bmtfStdMu_Quality_tree = 0;
+  bmtfStdMu_charge_tree  = -999;
 
   bmtfMu_pT_tree      = -999.;     
   bmtfMu_eta_tree     = -999.;
   bmtfMu_phi_tree     = -999.;
   bmtfMu_Quality_tree = 0;
+  bmtfMu_charge_tree  = -999;
   
 
   //Loop over Kalman Filter standalone muons 
@@ -149,9 +159,12 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     if (pTmu_temp < pTmuMax) continue;
     pTmuMax = pTmu_temp;
 
-    standMu_pT_tree  = pTmuMax;
-    standMu_eta_tree = mu->eta();
-    standMu_phi_tree = mu->phi();
+    standMu_pT_tree         = pTmuMax;
+    standMu_eta_tree        = mu->eta();
+    standMu_phi_tree        = mu->phi();
+    standMu_Quality_tree    = mu->quality();
+    standMu_charge_tree     = mu->charge();  
+    standMu_approxChi2_tree = mu->approxChi2();
 
     //std::cout << "mu pT :" << mu->pt() << " Eta: " << mu->eta() << " phi:" << mu->phi() << std::endl;
   }
@@ -192,6 +205,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfStdMu_eta_tree     = mu->hwEta() * 0.010875; // compressed eta from hardware * 0.010875 = eta
     bmtfStdMu_phi_tree     = L1P2NtupleMaker::calcGlobalPhi(mu->hwPhi(), mu->processor());
     bmtfStdMu_Quality_tree = mu->hwQual(); // hardware quality code
+    bmtfStdMu_charge_tree  = TMath::Power(-1, mu->hwSign()); // charge
 
     //std::cout << " mu pT :" << bmtfStdMu_pT_tree  << " Eta: " << bmtfStdMu_eta_tree << " Global phi Rad: " << bmtfStdMu_phi_tree << " quality: "<< bmtfStdMu_Quality_tree << std::endl;
   }
@@ -212,6 +226,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfMu_eta_tree     = mu->hwEta() * 0.010875; // compressed eta from hardware * 0.010875 = eta
     bmtfMu_phi_tree     = L1P2NtupleMaker::calcGlobalPhi(mu->hwPhi(), mu->processor());
     bmtfMu_Quality_tree = mu->hwQual(); // hardware quality code
+    bmtfMu_charge_tree  = TMath::Power(-1, mu->hwSign()); // charge
 
     //std::cout << " mu pT :" << bmtfMu_pT_tree  << " Eta: " << bmtfMu_eta_tree << " Global phi Rad: " << bmtfMu_phi_tree << " quality: "<< bmtfMu_Quality_tree << std::endl;
   }

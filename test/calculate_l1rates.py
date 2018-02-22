@@ -52,11 +52,14 @@ nbins_muPhi = 16
 
 h_l1rate = dict()
 # kalman
-h_l1rate["MuPt_ER"]     = ROOT.TH1F("MuPt_ER",    "L1_SingleMu p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
-h_l1rate["nMuVsPt_ER"]  = ROOT.TH1F("nMuVsPt_ER", "L1_SingleMu rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
-h_l1rate["nMuVsEta_ER"] = ROOT.TH1F("nMuVsEta_ER","L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
-h_l1rate["nMuVsPhi_ER"] = ROOT.TH1F("nMuVsPhi_ER","L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
-
+h_l1rate["MuPt_ER"]       = ROOT.TH1F("MuPt_ER",       "L1_SingleMu p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsPt_ER"]    = ROOT.TH1F("nMuVsPt_ER",    "L1_SingleMu rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
+h_l1rate["nMuVsEta_ER"]   = ROOT.TH1F("nMuVsEta_ER",   "L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
+h_l1rate["nMuVsPhi_ER"]   = ROOT.TH1F("nMuVsPhi_ER",   "L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
+h_l1rate["quality_ER"]    = ROOT.TH1F("quality_ER",    "L1_SingleMu quality information",                    17,          -0.5,  16.5 )
+h_l1rate["charge_ER"]     = ROOT.TH1F("charge_ER",     "L1_SingleMu charge information",                     12,          -1.2,  1.2  )
+h_l1rate["approxChi2_ER"] = ROOT.TH1F("approxChi2_ER", "L1_SingleMu Chi2 information",                       100,          0,    100  )
+ 
 # gmt
 h_l1rate["MuPt_gmt_ER"]     = ROOT.TH1F("MuPt_gmt_ER",    "L1_SingleMu_gmt p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
 h_l1rate["nMuVsPt_gmt_ER"]  = ROOT.TH1F("nMuVsPt_gmt_ER", "L1_SingleMu_gmt rate vs p_{T} threshold in |#eta|<=0.8", nbins_mupt,  -0.5,  130.5)
@@ -74,6 +77,7 @@ h_l1rate["nMuVsPt_bmtf_Std_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_Std_ER", "L1_SingleMu
 h_l1rate["nMuVsEta_bmtf_Std_ER"] = ROOT.TH1F("nMuVsEta_bmtf_Std_ER","L1_SingleMu16_bmtf_Std rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
 h_l1rate["nMuVsPhi_bmtf_Std_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_Std_ER","L1_SingleMu16_bmtf_Std rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 h_l1rate["quality_bmtf_Std_ER"]  = ROOT.TH1F("quality_bmtf_Std_ER", "L1_SingleMu_bmtf_Std quality information",                    17,          -0.5,  16.5 )
+h_l1rate["charge_bmtf_Std_ER"]   = ROOT.TH1F("charge_bmtf_Std_ER",  "L1_SingleMu_bmtf_Std charge information",                     12,          -1.2,  1.2  )
 
 # bmtf
 h_l1rate["MuPt_bmtf_ER"]     = ROOT.TH1F("MuPt_bmtf_ER",    "L1_SingleMu_bmtf p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
@@ -81,6 +85,7 @@ h_l1rate["nMuVsPt_bmtf_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_ER", "L1_SingleMu_bmtf ra
 h_l1rate["nMuVsEta_bmtf_ER"] = ROOT.TH1F("nMuVsEta_bmtf_ER","L1_SingleMu16_bmtf rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
 h_l1rate["nMuVsPhi_bmtf_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_ER","L1_SingleMu16_bmtf rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 h_l1rate["quality_bmtf_ER"]  = ROOT.TH1F("quality_bmtf_ER", "L1_SingleMu_bmtf quality information",                    17,          -0.5,  16.5 )
+h_l1rate["charge_bmtf_ER"]   = ROOT.TH1F("charge_bmtf_ER",  "L1_SingleMu_bmtf charge information",                     12,          -1.2,  1.2  )
 
 
 # assign axis title
@@ -88,6 +93,10 @@ h_l1rate["MuPt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_ER"].GetXaxis().SetTitle("#eta")
 h_l1rate["nMuVsPhi_ER"].GetXaxis().SetTitle("#phi")
+h_l1rate["quality_ER"].GetXaxis().SetTitle("#mu quality")    
+h_l1rate["charge_ER"].GetXaxis().SetTitle("#mu charge")     
+h_l1rate["approxChi2_ER"].GetXaxis().SetTitle("#chi^{2}") 
+
 
 h_l1rate["MuPt_gmt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_gmt_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
@@ -99,17 +108,21 @@ h_l1rate["nMuVsPt_gmt"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_gmt"].GetXaxis().SetTitle("#eta")
 h_l1rate["nMuVsPhi_gmt"].GetXaxis().SetTitle("#phi")
 
+
 h_l1rate["MuPt_bmtf_Std_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_bmtf_Std_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_bmtf_Std_ER"].GetXaxis().SetTitle("#eta")
 h_l1rate["nMuVsPhi_bmtf_Std_ER"].GetXaxis().SetTitle("#phi")
 h_l1rate["quality_bmtf_Std_ER"].GetXaxis().SetTitle("#mu quality")
+h_l1rate["charge_bmtf_Std_ER"].GetXaxis().SetTitle("#mu charge") 
+
 
 h_l1rate["MuPt_bmtf_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsPt_bmtf_ER"].GetXaxis().SetTitle("p_{T} [GeV]")
 h_l1rate["nMuVsEta_bmtf_ER"].GetXaxis().SetTitle("#eta")
 h_l1rate["nMuVsPhi_bmtf_ER"].GetXaxis().SetTitle("#phi")
 h_l1rate["quality_bmtf_ER"].GetXaxis().SetTitle("#mu quality")
+h_l1rate["charge_bmtf_ER"].GetXaxis().SetTitle("#mu charge") 
 
 
 
@@ -142,9 +155,12 @@ for jentry in xrange(mytree.GetEntriesFast()):
         break
 
     #Get the leading objects of the event
-    maxmu_pt  = mytree.standMu_pT
-    maxmu_eta = mytree.standMu_eta
-    maxmu_phi = mytree.standMu_phi
+    maxmu_pt         = mytree.standMu_pT
+    maxmu_eta        = mytree.standMu_eta
+    maxmu_phi        = mytree.standMu_phi
+    maxmu_quality    = mytree.standMu_Quality
+    maxmu_charge     = mytree.standMu_charge
+    maxmu_approxChi2 = mytree.standMu_approxChi2
     
     gmtmu_pt  = mytree.gmtMu_pT
     gmtmu_eta = mytree.gmtMu_eta
@@ -154,11 +170,13 @@ for jentry in xrange(mytree.GetEntriesFast()):
     bmtfStdmu_eta     = mytree.bmtfStdMu_eta
     bmtfStdmu_phi     = mytree.bmtfStdMu_phi
     bmtfStdmu_quality = mytree.bmtfStdMu_Quality
+    bmtfStdmu_charge  = mytree.bmtfStdMu_charge
 
     bmtfmu_pt      = mytree.bmtfMu_pT
     bmtfmu_eta     = mytree.bmtfMu_eta
     bmtfmu_phi     = mytree.bmtfMu_phi
     bmtfmu_quality = mytree.bmtfMu_Quality
+    bmtfmu_charge  = mytree.bmtfMu_charge
 
 
     ##Fill the histos for the pT distribution
@@ -223,11 +241,23 @@ for jentry in xrange(mytree.GetEntriesFast()):
 
 
     ##Fill the histos for the trigger quality 
+    if maxmu_pt >= 0. :
+        h_l1rate["quality_ER"].Fill(maxmu_quality)
+
     if bmtfStdmu_pt >= 0. :  
         h_l1rate["quality_bmtf_Std_ER"].Fill(bmtfStdmu_quality)
 
     if bmtfmu_pt >= 0. :  
         h_l1rate["quality_bmtf_ER"].Fill(bmtfmu_quality)
+
+
+    ##Fill histos for muon charge 
+    h_l1rate["charge_ER"].Fill(maxmu_charge)
+    h_l1rate["charge_bmtf_Std_ER"].Fill(bmtfStdmu_charge)
+    h_l1rate["charge_bmtf_ER"].Fill(bmtfmu_charge)
+
+    ##FIll histos for Chi2
+    h_l1rate["approxChi2_ER"].Fill(maxmu_approxChi2)
 
 
 

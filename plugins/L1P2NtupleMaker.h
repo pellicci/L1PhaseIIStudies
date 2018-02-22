@@ -30,6 +30,9 @@ private:
   float standMu_pT_tree;
   float standMu_eta_tree;
   float standMu_phi_tree;
+  int   standMu_Quality_tree;
+  int   standMu_charge_tree;
+  int   standMu_approxChi2_tree;
 
   float gmtMu_pT_tree; 
   float gmtMu_eta_tree;
@@ -40,11 +43,13 @@ private:
   float bmtfStdMu_eta_tree;
   float bmtfStdMu_phi_tree;
   int   bmtfStdMu_Quality_tree;
+  int   bmtfStdMu_charge_tree;
 
   float bmtfMu_pT_tree; 
   float bmtfMu_eta_tree;
   float bmtfMu_phi_tree;
   int   bmtfMu_Quality_tree;
+  int   bmtfMu_charge_tree;
 
 
   //Tokens

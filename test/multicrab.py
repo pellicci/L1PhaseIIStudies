@@ -4,7 +4,7 @@ config = Configuration()
 
 config.section_('General')
 config.General.transferOutputs = True
-config.General.workArea = 'crab_projects/kalmanPlusGmt/'
+config.General.workArea = 'crab_projects/180221_kalmanPlusGmtPlusBmtf/'
 
 config.section_('JobType')
 config.JobType.psetName = 'run_l1p2ntuplemaker.py'

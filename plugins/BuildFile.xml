@@ -4,4 +4,5 @@
 <use name="PhysicsTools/UtilAlgos"/>
 <use name="DataFormats/L1Trigger"/>
 <use name="DataFormats/L1TMuon"/>
+<use name="DataFormats/L1KalmanMuonTrigger"/>
 <flags EDM_PLUGIN="1"/>

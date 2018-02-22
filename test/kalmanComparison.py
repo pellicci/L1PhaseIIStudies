@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 # *******************
-# usage: ./kalmanGmtComparison.py -f results/input_file.root
+# usage: ./kalmanComparison.py -f results/input_file.root
 # *******************
 
 
@@ -42,11 +42,12 @@ while(names_iter.Next()) :
 names_list = histos_dict.keys()
 names_list.sort()
 
-kalman_list    = []
-gmt_list       = []
-bmtfStd_list   = []
-bmtf_list      = []
-plotName_list  = []
+kalman_list      = []
+gmt_list         = []
+bmtfStd_list     = []
+bmtfStdName_list = []
+bmtf_list        = []
+plotName_list    = []   # needed also for naming final plots
 
 
 for hname in names_list : 
@@ -57,15 +58,18 @@ for hname in names_list :
         elif "_bmtf" in hname :
             if "_Std" in hname : 
                 bmtfStd_list.append(histos_dict[hname])
+                bmtfStdName_list.append(hname) 
             else :
                 bmtf_list.append(histos_dict[hname])
         else :
             kalman_list.append(histos_dict[hname])
-            plotName_list.append(hname)  # quality plot not present in this list by now, therefore will not be drawn
+            plotName_list.append(hname) 
         
 
 # draw plots
-for i in range(len(plotName_list)) :
+for i in range(len(plotName_list)) :            # will not plot plots which are only in the bmtfStd list
+
+    if i > len(bmtfStdName_list) : continue     # will not plot plots which are only in the kmtf list
 
     canvas = TCanvas()
     canvas.cd()
