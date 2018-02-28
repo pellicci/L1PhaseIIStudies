@@ -52,6 +52,8 @@ plotName_list    = []   # needed also for naming final plots
 
 for hname in names_list : 
 
+    if "Chi2" in hname : continue    # will not store Chi2 plot since by now it is only in kalman list
+
     if "_ER" in hname :
         if "_gmt" in hname :
             gmt_list.append(histos_dict[hname])
@@ -66,10 +68,13 @@ for hname in names_list :
             plotName_list.append(hname) 
         
 
+print plotName_list
+print bmtfStdName_list
+
+
 # draw plots
 for i in range(len(plotName_list)) :            # will not plot plots which are only in the bmtfStd list
 
-    if i > len(bmtfStdName_list) : continue     # will not plot plots which are only in the kmtf list
 
     canvas = TCanvas()
     canvas.cd()
@@ -101,6 +106,9 @@ for i in range(len(plotName_list)) :            # will not plot plots which are 
     
     if "Pt" in plotName_list[i] : 
         canvas.SetLogy()
+
+    # if "Chi2" in plotName_list[i] : 
+    #     canvas.SetLogx()
         
 
     # gmt_list[i].Draw('EP')
@@ -111,7 +119,7 @@ for i in range(len(plotName_list)) :            # will not plot plots which are 
     
     
     # legend
-    legend = TLegend(0.74,0.68,0.94,0.87)
+    legend = TLegend(0.83,0.75,0.97,0.89)
     legend.AddEntry(kalman_list[i],"Kalman", "pl")
     # legend.AddEntry(gmt_list[i],"Gmt","pl")
     legend.AddEntry(bmtfStd_list[i],"BmtfStd","pl")

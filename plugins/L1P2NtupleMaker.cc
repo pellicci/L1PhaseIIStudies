@@ -167,6 +167,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     standMu_approxChi2_tree = mu->approxChi2();
 
     //std::cout << "mu pT :" << mu->pt() << " Eta: " << mu->eta() << " phi:" << mu->phi() << std::endl;
+    //std::cout<<"charge kalman mu: "<< standMu_charge_tree<< endl;
   }
 
 
@@ -208,6 +209,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfStdMu_charge_tree  = TMath::Power(-1, mu->hwSign()); // charge
 
     //std::cout << " mu pT :" << bmtfStdMu_pT_tree  << " Eta: " << bmtfStdMu_eta_tree << " Global phi Rad: " << bmtfStdMu_phi_tree << " quality: "<< bmtfStdMu_Quality_tree << std::endl;
+    //std::cout<<"charge Stdbmtf mu: "<< bmtfStdMu_charge_tree<<endl;
   }
 
 
@@ -229,6 +231,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bmtfMu_charge_tree  = TMath::Power(-1, mu->hwSign()); // charge
 
     //std::cout << " mu pT :" << bmtfMu_pT_tree  << " Eta: " << bmtfMu_eta_tree << " Global phi Rad: " << bmtfMu_phi_tree << " quality: "<< bmtfMu_Quality_tree << std::endl;
+    //std::cout<<"charge bmtf mu: "<< bmtfStdMu_charge_tree<<endl;
   }
 
 

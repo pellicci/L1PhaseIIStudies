@@ -57,8 +57,8 @@ h_l1rate["nMuVsPt_ER"]    = ROOT.TH1F("nMuVsPt_ER",    "L1_SingleMu rate vs p_{T
 h_l1rate["nMuVsEta_ER"]   = ROOT.TH1F("nMuVsEta_ER",   "L1_SingleMu16 rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
 h_l1rate["nMuVsPhi_ER"]   = ROOT.TH1F("nMuVsPhi_ER",   "L1_SingleMu16 rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 h_l1rate["quality_ER"]    = ROOT.TH1F("quality_ER",    "L1_SingleMu quality information",                    17,          -0.5,  16.5 )
-h_l1rate["charge_ER"]     = ROOT.TH1F("charge_ER",     "L1_SingleMu charge information",                     12,          -1.2,  1.2  )
-h_l1rate["approxChi2_ER"] = ROOT.TH1F("approxChi2_ER", "L1_SingleMu Chi2 information",                       100,          0,    100  )
+h_l1rate["charge_ER"]     = ROOT.TH1F("charge_ER",     "L1_SingleMu charge information",                     130,         -1.3,  1.3  )
+h_l1rate["approxChi2_ER"] = ROOT.TH1F("approxChi2_ER", "L1_SingleMu Chi2 information",                       100,          0,    1000 )
  
 # gmt
 h_l1rate["MuPt_gmt_ER"]     = ROOT.TH1F("MuPt_gmt_ER",    "L1_SingleMu_gmt p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
@@ -77,7 +77,7 @@ h_l1rate["nMuVsPt_bmtf_Std_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_Std_ER", "L1_SingleMu
 h_l1rate["nMuVsEta_bmtf_Std_ER"] = ROOT.TH1F("nMuVsEta_bmtf_Std_ER","L1_SingleMu16_bmtf_Std rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
 h_l1rate["nMuVsPhi_bmtf_Std_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_Std_ER","L1_SingleMu16_bmtf_Std rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 h_l1rate["quality_bmtf_Std_ER"]  = ROOT.TH1F("quality_bmtf_Std_ER", "L1_SingleMu_bmtf_Std quality information",                    17,          -0.5,  16.5 )
-h_l1rate["charge_bmtf_Std_ER"]   = ROOT.TH1F("charge_bmtf_Std_ER",  "L1_SingleMu_bmtf_Std charge information",                     12,          -1.2,  1.2  )
+h_l1rate["charge_bmtf_Std_ER"]   = ROOT.TH1F("charge_bmtf_Std_ER",  "L1_SingleMu_bmtf_Std charge information",                     130,         -1.3,  1.3  )
 
 # bmtf
 h_l1rate["MuPt_bmtf_ER"]     = ROOT.TH1F("MuPt_bmtf_ER",    "L1_SingleMu_bmtf p_{T} distribution in |#eta|<=0.8",      nbins_mupt,  -0.5,  130.5)
@@ -85,7 +85,7 @@ h_l1rate["nMuVsPt_bmtf_ER"]  = ROOT.TH1F("nMuVsPt_bmtf_ER", "L1_SingleMu_bmtf ra
 h_l1rate["nMuVsEta_bmtf_ER"] = ROOT.TH1F("nMuVsEta_bmtf_ER","L1_SingleMu16_bmtf rate vs #eta in |#eta|<=0.8",          30,          -3.,   3.   )
 h_l1rate["nMuVsPhi_bmtf_ER"] = ROOT.TH1F("nMuVsPhi_bmtf_ER","L1_SingleMu16_bmtf rate vs #phi in |#eta|<=0.8",          nbins_muPhi, -3.14, 3.14 )
 h_l1rate["quality_bmtf_ER"]  = ROOT.TH1F("quality_bmtf_ER", "L1_SingleMu_bmtf quality information",                    17,          -0.5,  16.5 )
-h_l1rate["charge_bmtf_ER"]   = ROOT.TH1F("charge_bmtf_ER",  "L1_SingleMu_bmtf charge information",                     12,          -1.2,  1.2  )
+h_l1rate["charge_bmtf_ER"]   = ROOT.TH1F("charge_bmtf_ER",  "L1_SingleMu_bmtf charge information",                     130,         -1.3,  1.3  )
 
 
 # assign axis title
@@ -241,23 +241,30 @@ for jentry in xrange(mytree.GetEntriesFast()):
 
 
     ##Fill the histos for the trigger quality 
-    if maxmu_pt >= 0. :
+    if maxmu_pt >= 16. :
         h_l1rate["quality_ER"].Fill(maxmu_quality)
 
-    if bmtfStdmu_pt >= 0. :  
+    if bmtfStdmu_pt >= 16. :  
         h_l1rate["quality_bmtf_Std_ER"].Fill(bmtfStdmu_quality)
 
-    if bmtfmu_pt >= 0. :  
+    if bmtfmu_pt >= 16. :  
         h_l1rate["quality_bmtf_ER"].Fill(bmtfmu_quality)
 
 
     ##Fill histos for muon charge 
-    h_l1rate["charge_ER"].Fill(maxmu_charge)
-    h_l1rate["charge_bmtf_Std_ER"].Fill(bmtfStdmu_charge)
-    h_l1rate["charge_bmtf_ER"].Fill(bmtfmu_charge)
+    if maxmu_pt >= 16. :
+        h_l1rate["charge_ER"].Fill(maxmu_charge)
+
+    if bmtfStdmu_pt >= 16. :
+        h_l1rate["charge_bmtf_Std_ER"].Fill(bmtfStdmu_charge)
+
+    if bmtfmu_pt >= 16. :
+        h_l1rate["charge_bmtf_ER"].Fill(bmtfmu_charge)
+
 
     ##FIll histos for Chi2
-    h_l1rate["approxChi2_ER"].Fill(maxmu_approxChi2)
+    if maxmu_pt >= 16. :
+        h_l1rate["approxChi2_ER"].Fill(maxmu_approxChi2)
 
 
 
@@ -277,6 +284,8 @@ for hname in h_l1rate:
     c1.cd()
     if "Pt" in hname:
         c1.SetLogy()
+    if "Chi2" in hname : 
+        c1.SetLogx()
     h_l1rate[hname].Draw("PE")
     c1.SaveAs(out_dir + hname + ".png")
     c1.SaveAs(out_dir + hname + ".pdf")
