@@ -55,3 +55,17 @@ if __name__ == '__main__':
     p200.join()
 
     config.Site.ignoreGlobalBlacklist = True
+
+    config.General.requestName = 'P1P2NtupleMaker_DYJetsToLL140'
+    config.Data.unitsPerJob = 10
+    config.Data.inputDataset = '/DYJetsToLL_M-50_TuneCUETP8M1_14TeV-madgraphMLM-pythia8_ext1/PhaseIISpring17D-PU140_100M_90X_upgrade2023_realistic_v9-v1/GEN-SIM-DIGI-RAW'
+    pDY140 = Process(target=submit, args=(config,))
+    pDY140.start()
+    pDY140.join()
+
+    config.General.requestName = 'P1P2NtupleMaker_DYJetsToLL200'
+    config.Data.unitsPerJob = 10
+    config.Data.inputDataset = '/DYJetsToLL_M-50_TuneCUETP8M1_14TeV-madgraphMLM-pythia8_ext1/PhaseIISpring17D-PU200_100M_90X_upgrade2023_realistic_v9-v1/GEN-SIM-DIGI-RAW'
+    pDY200 = Process(target=submit, args=(config,))
+    pDY200.start()
+    pDY200.join()
