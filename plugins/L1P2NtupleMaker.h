@@ -16,6 +16,7 @@ private:
   virtual void endJob() override;
 
   const edm::InputTag L1standMuCandidates_;
+  const edm::InputTag L1standMuAllCandidates_;
   const edm::InputTag L1GmtCandidates_;
   const edm::InputTag L1BmtfStdCandidates_;
   const edm::InputTag L1BmtfCandidates_;
@@ -33,6 +34,13 @@ private:
   int   standMu_Quality_tree;
   int   standMu_charge_tree;
   int   standMu_approxChi2_tree;
+
+  float standMuAll_pT_tree;
+  float standMuAll_eta_tree;
+  float standMuAll_phi_tree;
+  int   standMuAll_Quality_tree;
+  int   standMuAll_charge_tree;
+  int   standMuAll_approxChi2_tree;
 
   float gmtMu_pT_tree; 
   float gmtMu_eta_tree;
@@ -54,6 +62,7 @@ private:
 
   //Tokens
   edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuCandidatesToken_;
+  edm::EDGetTokenT<std::vector<L1KalmanMuTrack> > L1standMuAllCandidatesToken_;
   edm::EDGetTokenT<BXVector<l1t::Muon> > L1GmtCandidatesToken_; 
   edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand> > L1BmtfStdCandidatesToken_; 
   edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand> > L1BmtfCandidatesToken_; 

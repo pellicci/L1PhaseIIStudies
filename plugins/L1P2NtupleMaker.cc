@@ -24,14 +24,16 @@ using namespace::std;
 // constructors and destructor
 L1P2NtupleMaker::L1P2NtupleMaker(const edm::ParameterSet& iConfig) :
   L1standMuCandidates_(iConfig.getParameter<edm::InputTag>("L1standMuCandidates")),
+  L1standMuAllCandidates_(iConfig.getParameter<edm::InputTag>("L1standMuAllCandidates")),
   L1GmtCandidates_(iConfig.getParameter<edm::InputTag>("L1GmtCandidates")),
   L1BmtfStdCandidates_(iConfig.getParameter<edm::InputTag>("L1BmtfStdCandidates")),
   L1BmtfCandidates_(iConfig.getParameter<edm::InputTag>("L1BmtfCandidates"))
 {
-  L1standMuCandidatesToken_ = consumes<vector<L1KalmanMuTrack> >(L1standMuCandidates_); 
-  L1GmtCandidatesToken_     = consumes<BXVector<l1t::Muon> >(L1GmtCandidates_);
-  L1BmtfStdCandidatesToken_ = consumes<BXVector<l1t::RegionalMuonCand> >(L1BmtfStdCandidates_);
-  L1BmtfCandidatesToken_    = consumes<BXVector<l1t::RegionalMuonCand> >(L1BmtfCandidates_);
+  L1standMuCandidatesToken_    = consumes<vector<L1KalmanMuTrack> >(L1standMuCandidates_); 
+  L1standMuAllCandidatesToken_ = consumes<vector<L1KalmanMuTrack> >(L1standMuAllCandidates_);
+  L1GmtCandidatesToken_        = consumes<BXVector<l1t::Muon> >(L1GmtCandidates_);
+  L1BmtfStdCandidatesToken_    = consumes<BXVector<l1t::RegionalMuonCand> >(L1BmtfStdCandidates_);
+  L1BmtfCandidatesToken_       = consumes<BXVector<l1t::RegionalMuonCand> >(L1BmtfCandidates_);
 
   mytree = fs->make<TTree>("mytree", "Tree containing L1 info");
 
@@ -39,8 +41,15 @@ L1P2NtupleMaker::L1P2NtupleMaker(const edm::ParameterSet& iConfig) :
   mytree->Branch("standMu_eta",&standMu_eta_tree);
   mytree->Branch("standMu_phi",&standMu_phi_tree);
   mytree->Branch("standMu_Quality", &standMu_Quality_tree);
-  mytree->Branch("standMu_charge", &standMu_charge_tree);
+  mytree->Branch("standMu_charge",  &standMu_charge_tree);
   mytree->Branch("standMu_approxChi2", &standMu_approxChi2_tree);
+
+  mytree->Branch("standMuAll_pT", &standMuAll_pT_tree);
+  mytree->Branch("standMuAll_eta",&standMuAll_eta_tree);
+  mytree->Branch("standMuAll_phi",&standMuAll_phi_tree);
+  mytree->Branch("standMuAll_Quality", &standMuAll_Quality_tree);
+  mytree->Branch("standMuAll_charge",  &standMuAll_charge_tree);
+  mytree->Branch("standMuAll_approxChi2", &standMuAll_approxChi2_tree);
 
   mytree->Branch("gmtMu_pT", &gmtMu_pT_tree); 
   mytree->Branch("gmtMu_eta",&gmtMu_eta_tree);
@@ -114,6 +123,9 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   edm::Handle<vector<L1KalmanMuTrack>  > L1standMuCandidates;
   iEvent.getByLabel(L1standMuCandidates_, L1standMuCandidates);
 
+  edm::Handle<vector<L1KalmanMuTrack>  > L1standMuAllCandidates;
+  iEvent.getByLabel(L1standMuAllCandidates_, L1standMuAllCandidates);
+
   edm::Handle<BXVector<l1t::Muon> > L1GmtCandidates;
   iEvent.getByLabel(L1GmtCandidates_, L1GmtCandidates);
 
@@ -129,6 +141,13 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   standMu_Quality_tree    = 0;
   standMu_charge_tree     = -999;
   standMu_approxChi2_tree = -999;
+
+  standMuAll_pT_tree         = -999.;
+  standMuAll_eta_tree        = -999.;
+  standMuAll_phi_tree        = -999.;
+  standMuAll_Quality_tree    = 0;
+  standMuAll_charge_tree     = -999;
+  standMuAll_approxChi2_tree = -999;
 
   gmtMu_pT_tree      = -999.;     
   gmtMu_eta_tree     = -999.;
@@ -148,7 +167,7 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   bmtfMu_charge_tree  = -999;
   
 
-  //Loop over Kalman Filter standalone muons 
+  //Loop over Kalman Filter Cleaned standalone muons 
   float pTmuMax   = -999.;
   float pTmu_temp = -999.;
   
@@ -168,6 +187,29 @@ void L1P2NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
     //std::cout << "mu pT :" << mu->pt() << " Eta: " << mu->eta() << " phi:" << mu->phi() << std::endl;
     //std::cout<<"charge kalman mu: "<< standMu_charge_tree<< endl;
+  }
+
+
+  //Loop over Kalman Filter All standalone muons 
+  float pTmuAllMax   = -999.;
+  float pTmuAll_temp = -999.;
+  
+  for(auto mu = L1standMuAllCandidates->begin(); mu != L1standMuAllCandidates->end(); ++mu){
+
+    pTmuAll_temp = mu->pt();
+
+    if (pTmuAll_temp < pTmuAllMax) continue;
+    pTmuAllMax = pTmuAll_temp;
+
+    standMuAll_pT_tree         = pTmuAllMax;
+    standMuAll_eta_tree        = mu->eta();
+    standMuAll_phi_tree        = mu->phi();
+    standMuAll_Quality_tree    = mu->quality();
+    standMuAll_charge_tree     = mu->charge();  
+    standMuAll_approxChi2_tree = mu->approxChi2();
+
+    //std::cout << "mu pT :" << mu->pt() << " Eta: " << mu->eta() << " phi:" << mu->phi() << std::endl;
+    //std::cout<<"charge kalman All mu: "<< standMuAll_charge_tree<< endl;
   }
 
 

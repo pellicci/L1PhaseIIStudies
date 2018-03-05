@@ -9,7 +9,7 @@ import sys
 import os
 import argparse
 import ROOT
-from ROOT import gSystem, TFile, gPad, TCanvas, TLegend, kWhite, kBlack
+from ROOT import gSystem, TFile, gPad, TCanvas, TLegend, kWhite, kBlack, kGreen
 
 
 # create output directory
@@ -42,17 +42,19 @@ while(names_iter.Next()) :
 names_list = histos_dict.keys()
 names_list.sort()
 
-kalman_list      = []
-gmt_list         = []
-bmtfStd_list     = []
-bmtfStdName_list = []
-bmtf_list        = []
-plotName_list    = []   # needed also for naming final plots
+kalman_list        = []
+kalmanAll_list     = []
+kalmanAllName_list = []   # cross check list
+gmt_list           = []
+bmtfStd_list       = []
+bmtfStdName_list   = []   # cross check list
+bmtf_list          = []
+plotName_list      = []   # needed also for naming final plots
 
 
 for hname in names_list : 
 
-    if "Chi2" in hname : continue    # will not store Chi2 plot since by now it is only in kalman list
+    if "Chi2" in hname : continue    # will not store Chi2 plot since by now it is only in kalman lists
 
     if "_ER" in hname :
         if "_gmt" in hname :
@@ -63,6 +65,9 @@ for hname in names_list :
                 bmtfStdName_list.append(hname) 
             else :
                 bmtf_list.append(histos_dict[hname])
+        elif "_All" in hname :
+            kalmanAll_list.append(histos_dict[hname])
+            kalmanAllName_list.append(hname) 
         else :
             kalman_list.append(histos_dict[hname])
             plotName_list.append(hname) 
@@ -70,6 +75,7 @@ for hname in names_list :
 
 print plotName_list
 print bmtfStdName_list
+print kalmanAllName_list
 
 
 # draw plots
@@ -87,6 +93,10 @@ for i in range(len(plotName_list)) :            # will not plot plots which are 
     kalman_list[i].SetMarkerColor(2)
     kalman_list[i].SetLineColor(2)
 
+    kalmanAll_list[i].SetMarkerStyle(20)
+    kalmanAll_list[i].SetMarkerColor(kGreen+2)
+    kalmanAll_list[i].SetLineColor(kGreen+3)
+
     bmtfStd_list[i].SetMarkerStyle(20)
     bmtfStd_list[i].SetMarkerColor(4)
     bmtfStd_list[i].SetLineColor(1)
@@ -96,9 +106,10 @@ for i in range(len(plotName_list)) :            # will not plot plots which are 
     bmtf_list[i].SetLineColor(1)
 
 
-    kalman_list[i].SetMaximum( 1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
-    bmtfStd_list[i].SetMaximum(1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
-    bmtf_list[i].SetMaximum(   1.3 * max(kalman_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    kalman_list[i].SetMaximum(   1.5 * max(kalman_list[i].GetMaximum(),kalmanAll_list[i].GetMaximum(),bmtfStd_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    kalmanAll_list[i].SetMaximum(1.5 * max(kalman_list[i].GetMaximum(),kalmanAll_list[i].GetMaximum(),bmtfStd_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    bmtfStd_list[i].SetMaximum(  1.5 * max(kalman_list[i].GetMaximum(),kalmanAll_list[i].GetMaximum(),bmtfStd_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
+    bmtf_list[i].SetMaximum(     1.5 * max(kalman_list[i].GetMaximum(),kalmanAll_list[i].GetMaximum(),bmtfStd_list[i].GetMaximum(),bmtf_list[i].GetMaximum()))
 
     #kalman_list[i].SetMinimum(min(kalman_list[i].GetMinimum(),bmtf_list[i].GetMinimum()))
     #bmtf_list[i].SetMinimum(min(kalman_list[i].GetMinimum(),bmtf_list[i].GetMinimum()))
@@ -113,21 +124,23 @@ for i in range(len(plotName_list)) :            # will not plot plots which are 
 
     # gmt_list[i].Draw('EP')
     kalman_list[i].Draw('EP')
+    kalmanAll_list[i].Draw('sameEP')
     bmtfStd_list[i].Draw('sameEP')
     bmtf_list[i].Draw('sameEP')
     
     
     
     # legend
-    legend = TLegend(0.83,0.75,0.97,0.89)
-    legend.AddEntry(kalman_list[i],"Kalman", "pl")
+    legend = TLegend(0.80,0.74,0.99,0.91)
+    legend.AddEntry(kalman_list[i],"Kalman Cleaned", "pl")
+    legend.AddEntry(kalmanAll_list[i],"Kalman All", "pl")
     # legend.AddEntry(gmt_list[i],"Gmt","pl")
     legend.AddEntry(bmtfStd_list[i],"BmtfStd","pl")
     legend.AddEntry(bmtf_list[i],"Bmtf","pl")
     legend.SetFillColor(kWhite)
     legend.SetLineColor(kBlack)
     legend.SetTextFont(43)
-    legend.SetTextSize(20)
+    legend.SetTextSize(14)#20
     legend.Draw()
     
     canvas.Update()
